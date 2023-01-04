@@ -25,6 +25,13 @@ namespace CodeChallenge.Data
                 List<Employee> employees = LoadEmployees();
                 _employeeContext.Employees.AddRange(employees);
 
+                // Writes correct DirectReports here, but doesn't save to db context??
+                // Console.WriteLine("Last");
+                // Console.WriteLine(employees[0].DirectReports[0].FirstName);
+                // TODO: How to check _employeeContext.Employees here
+                // -> I was able to do this in the debugger and the data for 
+                // ... _employeeContext.Employees looks right
+
                 await _employeeContext.SaveChangesAsync();
             }
         }
@@ -51,7 +58,6 @@ namespace CodeChallenge.Data
 
             employees.ForEach(employee =>
             {
-                
                 if (employee.DirectReports != null)
                 {
                     var referencedEmployees = new List<Employee>(employee.DirectReports.Count);

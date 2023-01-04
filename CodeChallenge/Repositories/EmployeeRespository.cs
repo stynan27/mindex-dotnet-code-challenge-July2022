@@ -29,7 +29,20 @@ namespace CodeChallenge.Repositories
 
         public Employee GetById(string id)
         {
-            return _employeeContext.Employees.SingleOrDefault(e => e.EmployeeId == id);
+            // TODO: directReports property is empty??
+            // Problem: Previously we were only loading the data table, "Lazy Loading", which doesn't 
+            // ... retrieve related complex structures for performance.
+
+            // Solution: Filter for current employee first (Where) then include only its directReports (lazy load recursive employees)
+            // Could have applied ToList() to materialize as list of employees before querying by id, 
+            // ... but this would make the query slower as our indirect reports grow.
+            // Include() allows you to indicate which related entities should be read from the database as part of the same query.
+            return _employeeContext.Employees
+              .Where(e => e.EmployeeId == id) 
+              .Include("DirectReports")
+              .SingleOrDefault();
+              // .ToList()
+              // .SingleOrDefault(e => e.EmployeeId == id);
         }
 
         public Task SaveAsync()
