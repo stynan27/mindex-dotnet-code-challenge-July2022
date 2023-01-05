@@ -9,6 +9,37 @@ using CodeChallenge.Models;
 
 namespace CodeChallenge.Controllers
 {
+    //   [ApiController]
+    // [Route("api/test")]
+    // public class TestController : ControllerBase
+    // {
+    //     private readonly ILogger _logger;
+
+    //     // constructor
+    //     public TestController(ILogger<EmployeeController> logger)
+    //     {
+    //         _logger = logger;
+    //     }
+
+    //     [HttpGet("{id}")]
+    //     public IActionResult GetTestResult(String id)
+    //     {
+    //         _logger.LogWarning("Testing...");
+    //         _logger.LogInformation("Testing... inform");
+    //         _logger.LogDebug($"Received employee get request for '{id}'");
+
+    //         //Example of a console log/print
+    //         //Console.WriteLine("This is C#");
+
+    //         //var employee = _employeeService.GetById(id);
+
+    //         // if (employee == null)
+    //         //     return NotFound();
+
+    //         return Ok("Hello World");
+    //     }
+    // }
+
     [ApiController]
     [Route("api/employee")]
     public class EmployeeController : ControllerBase
@@ -43,6 +74,23 @@ namespace CodeChallenge.Controllers
                 return NotFound();
 
             return Ok(employee);
+        }
+
+        // TODO: Add another GET here for reporting structure
+        // I could have created another controller instead for ReportingStructure, 
+        // but I opted to tie this into an existing endpoint of employee.
+        [HttpGet("{id}/reportingStructure", Name = "getReportingStructure")]
+        public IActionResult getReportingStructure(String id)
+        {
+            _logger.LogDebug($"Received getReportingStructure get request for '{id}'");
+
+            var reportingStructure = _employeeService.GetReportStructure(id);
+
+            // if no report structure was found
+            if (reportingStructure == null)
+                return NotFound();
+
+            return Ok(reportingStructure);
         }
 
         [HttpPut("{id}")]

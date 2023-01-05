@@ -13,6 +13,46 @@ namespace CodeChallenge.Services
         private readonly IEmployeeRepository _employeeRepository;
         private readonly ILogger<EmployeeService> _logger;
 
+        // TODO: Helper method to get number of reports
+        // Similar to JavaScript Challenge - Breadth First Search of Employee Hierarchy
+        private int GetTotalReports(Employee firstEmployee)
+        {
+          // queue of employees to check until - until all have been visited
+          Queue<Employee> employeeQueue = new Queue<Employee>();
+          // initalize with the first employee to check
+          employeeQueue.Enqueue(firstEmployee);
+          // Dictionary of all reporting employees found
+          Dictionary<string, Employee> allReports = new Dictionary<string, Employee>();
+
+          // employee to check
+          Employee currentEmployee = null;
+
+          // continue to find reports while queue is not empty
+          while(employeeQueue.Count != 0)
+          {
+              currentEmployee = employeeQueue.Dequeue();
+              //_logger.LogInformation(currentEmployee.DirectReports[0].FirstName);
+              if (currentEmployee.DirectReports != null) 
+              {
+                  foreach (Employee reportEmployee in currentEmployee.DirectReports)
+                  {
+                      if (!(allReports.ContainsKey(reportEmployee.EmployeeId)))
+                      {
+                          // Fetch report employee here to get its directReports.
+                          // Problem: Can become expensive to fetch, but only as needed.
+                          // Employee reportEmployee = _employeeRepository.GetById(directReport.EmployeeId);
+                          employeeQueue.Enqueue(reportEmployee);
+                          _logger.LogInformation("Employee Added... " + reportEmployee.FirstName + ' ' + reportEmployee.LastName);
+                          allReports.Add(reportEmployee.EmployeeId, reportEmployee);
+                      }
+                  }
+              }
+          }
+
+          // return total number found
+          return allReports.Count;
+        }
+
         public EmployeeService(ILogger<EmployeeService> logger, IEmployeeRepository employeeRepository)
         {
             _employeeRepository = employeeRepository;
@@ -38,6 +78,31 @@ namespace CodeChallenge.Services
             }
 
             return null;
+        }
+
+        public ReportingStructure GetReportStructure(string id)
+        {
+            // First check for a valid employee id
+            if (String.IsNullOrEmpty(id))
+            {
+              return null;
+            }
+            
+            // Attempt to find the employee by the id provided
+            Employee reportEmployee = _employeeRepository.GetById(id);
+            if (reportEmployee == null)
+            {
+              return null;
+            }
+
+            // Find total reports (number of direct and indirect to return)
+            int numReports = GetTotalReports(reportEmployee);
+
+            return new ReportingStructure
+            {
+                employee = reportEmployee,
+                numberOfReports = numReports
+            };
         }
 
         public Employee Replace(Employee originalEmployee, Employee newEmployee)
