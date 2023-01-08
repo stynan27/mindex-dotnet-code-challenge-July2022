@@ -10,6 +10,9 @@ using CodeCodeChallenge.Tests.Integration.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+// Notes for myself on running and configuring MSTest with VSCode:
+// https://learn.microsoft.com/en-us/dotnet/core/tutorials/testing-library-with-visual-studio-code?pivots=dotnet-6-0
+
 namespace CodeCodeChallenge.Tests.Integration
 {
     [TestClass]
@@ -81,6 +84,20 @@ namespace CodeCodeChallenge.Tests.Integration
             var employee = response.DeserializeContent<Employee>();
             Assert.AreEqual(expectedFirstName, employee.FirstName);
             Assert.AreEqual(expectedLastName, employee.LastName);
+        }
+
+        [TestMethod]
+        public void GetEmployeeById_Returns_NotFound()
+        {
+            var employeeId = "Bad id";
+
+            // Execute
+            var getRequestTask = _httpClient.GetAsync($"api/employee/{employeeId}");
+            var response = getRequestTask.Result;
+
+            // Assert
+            // .NotFound
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [TestMethod]
