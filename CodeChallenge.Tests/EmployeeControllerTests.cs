@@ -1,4 +1,4 @@
-
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -7,7 +7,6 @@ using CodeChallenge.Models;
 
 using CodeCodeChallenge.Tests.Integration.Extensions;
 using CodeCodeChallenge.Tests.Integration.Helpers;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 // Notes for myself on running and configuring MSTest with VSCode:
@@ -96,8 +95,60 @@ namespace CodeCodeChallenge.Tests.Integration
             var response = getRequestTask.Result;
 
             // Assert
-            // .NotFound
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        // NOTE: Perform ReportingStructure tests before UpdateEmployee
+        // ... this is because the reference to Pete Best will have side-effects 
+        // ... for John Lennon's directReports list.
+        [TestMethod]
+        public void GetReportingStructure_Returns_Ok()
+        {
+            // Arrange
+            var employeeId = "16a596ae-edd3-4847-99fe-c4518e82c86f";
+            var expectedFirstName = "John";
+            var expectedLastName = "Lennon";
+
+            // Execute
+            var getRequestTask = _httpClient.GetAsync($"api/employee/{employeeId}/reportingStructure");
+            var response = getRequestTask.Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            var reports = response.DeserializeContent<ReportingStructure>();
+            Assert.AreEqual(expectedFirstName, reports.employee.FirstName);
+            Assert.AreEqual(expectedLastName, reports.employee.LastName);
+        }
+
+        [TestMethod]
+        public void GetReportingStructure_Returns_NotFound()
+        {
+            // Arrange
+            var employeeId = "Bad id";
+
+            // Execute
+            var getRequestTask = _httpClient.GetAsync($"api/employee/{employeeId}/reportingStructure");
+            var response = getRequestTask.Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void GetReportingStructure_Returns_ReportingStructure_with_All_Reports()
+        {
+            // Arrange
+            var employeeId = "16a596ae-edd3-4847-99fe-c4518e82c86f";
+            var expectedReports = 4;
+
+            // Execute
+            var getRequestTask = _httpClient.GetAsync($"api/employee/{employeeId}/reportingStructure");
+            var response = getRequestTask.Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            var reports = response.DeserializeContent<ReportingStructure>();
+            Assert.AreEqual(expectedReports, reports.numberOfReports);
         }
 
         [TestMethod]
@@ -106,7 +157,7 @@ namespace CodeCodeChallenge.Tests.Integration
             // Arrange
             var employee = new Employee()
             {
-                EmployeeId = "03aa1462-ffa9-4978-901b-7c001562cf6f",
+                EmployeeId = "03aa1462-ffa9-4978-901b-7c001562cf6f", 
                 Department = "Engineering",
                 FirstName = "Pete",
                 LastName = "Best",

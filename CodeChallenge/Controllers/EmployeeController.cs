@@ -80,7 +80,7 @@ namespace CodeChallenge.Controllers
         // I could have created another controller instead for ReportingStructure, 
         // but I opted to tie this into an existing endpoint of employee.
         [HttpGet("{id}/reportingStructure", Name = "getReportingStructure")]
-        public IActionResult getReportingStructure(String id)
+        public IActionResult GetReportingStructure(String id)
         {
             _logger.LogDebug($"Received getReportingStructure get request for '{id}'");
 
