@@ -10,6 +10,7 @@ namespace CodeChallenge.Repositories
         Employee Add(Employee employee);
         Employee Remove(Employee employee);
         Compensation Add(Compensation compensation);
+        Compensation GetCompByEmployeeId(String id);
         Task SaveAsync();
     }
 }

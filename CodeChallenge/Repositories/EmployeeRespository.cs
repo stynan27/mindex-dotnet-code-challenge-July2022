@@ -58,6 +58,13 @@ namespace CodeChallenge.Repositories
               .SingleOrDefault(e => e.EmployeeId == id);
         }
 
+        // Find Compensation based on the provided employee id
+        public Compensation GetCompByEmployeeId(string id)
+        {
+            // Include to eager load the employee object (using foreign key of employeeId)
+            return _employeeContext.Compensations.Include(c => c.Employee).SingleOrDefault(c => c.EmployeeId == id);
+        }
+
         public Task SaveAsync()
         {
             return _employeeContext.SaveChangesAsync();

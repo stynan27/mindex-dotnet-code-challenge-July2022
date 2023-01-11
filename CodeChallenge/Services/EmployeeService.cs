@@ -70,7 +70,7 @@ namespace CodeChallenge.Services
             return employee;
         }
 
-        // TODO: Create compensation
+        // Create compensation - add compensation to DBContext and save.
         public Compensation CreateCompensation(Compensation compensation)
         {
             if(compensation != null)
@@ -117,16 +117,15 @@ namespace CodeChallenge.Services
             };
         }
 
-        // TODO: Define Get request
-        // public Employee GetCompensationById(string id)
-        // {
-        //     if(!String.IsNullOrEmpty(id))
-        //     {
-        //         return _employeeRepository.GetById(id);
-        //     }
+        public Compensation GetCompByEmployeeId(string id)
+        {
+            if(!String.IsNullOrEmpty(id))
+            {
+                return _employeeRepository.GetCompByEmployeeId(id);
+            }
 
-        //     return null;
-        // }
+            return null;
+        }
 
         public Employee Replace(Employee originalEmployee, Employee newEmployee)
         {

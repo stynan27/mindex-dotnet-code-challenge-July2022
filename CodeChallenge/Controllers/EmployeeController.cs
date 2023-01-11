@@ -82,14 +82,16 @@ namespace CodeChallenge.Controllers
                 return NotFound();
             }
 
-            // Update the EmployeeId property of the new compensation.
+            // Update the EmployeeId foreign key property of the new compensation.
+            // General best practice to save this entity with just the foreign key 
+            // ... rather than the entire nested employee object.
+            // Prevents bloating of database and potential circular reference issues.
             compensation.EmployeeId = employeeId;
 
             // Create a new compensation (save to DB Context)
             _employeeService.CreateCompensation(compensation);
 
-            return Ok();
-            //return CreatedAtRoute("getCompensationById", new { id = compensation.CompensationId }, compensation);
+            return CreatedAtRoute("getCompByEmployeeId", new { id = compensation.CompensationId }, compensation);
         }
 
         [HttpGet("{id}", Name = "getEmployeeById")]
@@ -121,19 +123,19 @@ namespace CodeChallenge.Controllers
             return Ok(reportingStructure);
         }
 
-        // [HttpGet("{id}/compensation", Name = "getCompensationById")]
-        // public IActionResult GetCompensationById(String id)
-        // {
-        //     _logger.LogDebug($"Received getCompensation get request for '{id}'");
+        [HttpGet("{id}/compensation", Name = "getCompByEmployeeId")]
+        public IActionResult GetCompByEmployeeId(String id)
+        {
+            _logger.LogDebug($"Received getCompensation get request for '{id}'");
 
-        //     var compensation = _employeeService.GetCompensationById(id);
+            var compensation = _employeeService.GetCompByEmployeeId(id);
 
-        //     // if no compensation structure was found
-        //     if (compensation == null)
-        //         return NotFound();
+            // if no compensation structure was found
+            if (compensation == null)
+                return NotFound();
 
-        //     return Ok(compensation);
-        // }
+            return Ok(compensation);
+        }
 
         [HttpPut("{id}")]
         public IActionResult ReplaceEmployee(String id, [FromBody]Employee newEmployee)
