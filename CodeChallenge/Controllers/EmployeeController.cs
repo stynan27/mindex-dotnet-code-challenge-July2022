@@ -63,6 +63,35 @@ namespace CodeChallenge.Controllers
             return CreatedAtRoute("getEmployeeById", new { id = employee.EmployeeId }, employee);
         }
 
+        // CreateCompensation
+        [HttpPost("{employeeId}/compensation", Name="createCompensation")]
+        public IActionResult CreateCompensation(string employeeId, [FromBody] Compensation compensation)
+        {
+            _logger.LogDebug($"Received compensation create request for employee '{employeeId}'");
+            // Log compensation body
+            _logger.LogDebug($"Received compensation of Salary '{compensation.Salary}' and EffectiveDate '{compensation.EffectiveDate}'.");
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var employee = _employeeService.GetById(employeeId);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            // Update the EmployeeId property of the new compensation.
+            compensation.EmployeeId = employeeId;
+
+            // Create a new compensation (save to DB Context)
+            _employeeService.CreateCompensation(compensation);
+
+            return Ok();
+            //return CreatedAtRoute("getCompensationById", new { id = compensation.CompensationId }, compensation);
+        }
+
         [HttpGet("{id}", Name = "getEmployeeById")]
         public IActionResult GetEmployeeById(String id)
         {
@@ -76,15 +105,14 @@ namespace CodeChallenge.Controllers
             return Ok(employee);
         }
 
-        // TODO: Add another GET here for reporting structure
         // I could have created another controller instead for ReportingStructure, 
-        // but I opted to tie this into an existing endpoint of employee.
+        // but I opted to tie this into an existing endpoint of employee (HAS-A Employee type).
         [HttpGet("{id}/reportingStructure", Name = "getReportingStructure")]
         public IActionResult GetReportingStructure(String id)
         {
             _logger.LogDebug($"Received getReportingStructure get request for '{id}'");
 
-            var reportingStructure = _employeeService.GetReportStructure(id);
+            var reportingStructure = _employeeService.GetReportStructureById(id);
 
             // if no report structure was found
             if (reportingStructure == null)
@@ -92,6 +120,20 @@ namespace CodeChallenge.Controllers
 
             return Ok(reportingStructure);
         }
+
+        // [HttpGet("{id}/compensation", Name = "getCompensationById")]
+        // public IActionResult GetCompensationById(String id)
+        // {
+        //     _logger.LogDebug($"Received getCompensation get request for '{id}'");
+
+        //     var compensation = _employeeService.GetCompensationById(id);
+
+        //     // if no compensation structure was found
+        //     if (compensation == null)
+        //         return NotFound();
+
+        //     return Ok(compensation);
+        // }
 
         [HttpPut("{id}")]
         public IActionResult ReplaceEmployee(String id, [FromBody]Employee newEmployee)

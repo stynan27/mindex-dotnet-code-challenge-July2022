@@ -15,5 +15,7 @@ namespace CodeChallenge.Data
         }
 
         public DbSet<Employee> Employees { get; set; }
-    }
+        // Compensations represents collection of all Compensation entities (from DBcontext) to be queried.
+        public DbSet<Compensation> Compensations { get; set; }
+  }
 }

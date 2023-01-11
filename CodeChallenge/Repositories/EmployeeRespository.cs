@@ -27,6 +27,14 @@ namespace CodeChallenge.Repositories
             return employee;
         }
 
+        // Add a new compensation to DB context.
+        public Compensation Add(Compensation compensation)
+        {
+            compensation.CompensationId = Guid.NewGuid().ToString();
+            _employeeContext.Compensations.Add(compensation);
+            return compensation;
+        }
+
         public Employee GetById(string id)
         {
             // TODO: directReports property is empty??

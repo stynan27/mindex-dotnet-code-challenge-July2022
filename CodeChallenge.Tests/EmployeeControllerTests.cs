@@ -116,8 +116,8 @@ namespace CodeCodeChallenge.Tests.Integration
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var reports = response.DeserializeContent<ReportingStructure>();
-            Assert.AreEqual(expectedFirstName, reports.employee.FirstName);
-            Assert.AreEqual(expectedLastName, reports.employee.LastName);
+            Assert.AreEqual(expectedFirstName, reports.Employee.FirstName);
+            Assert.AreEqual(expectedLastName, reports.Employee.LastName);
         }
 
         [TestMethod]
@@ -148,7 +148,7 @@ namespace CodeCodeChallenge.Tests.Integration
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var reports = response.DeserializeContent<ReportingStructure>();
-            Assert.AreEqual(expectedReports, reports.numberOfReports);
+            Assert.AreEqual(expectedReports, reports.NumberOfReports);
         }
 
         [TestMethod]

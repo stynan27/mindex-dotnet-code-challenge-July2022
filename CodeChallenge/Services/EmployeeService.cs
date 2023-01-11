@@ -70,6 +70,18 @@ namespace CodeChallenge.Services
             return employee;
         }
 
+        // TODO: Create compensation
+        public Compensation CreateCompensation(Compensation compensation)
+        {
+            if(compensation != null)
+            {
+                _employeeRepository.Add(compensation);
+                _employeeRepository.SaveAsync().Wait();
+            }
+
+            return compensation;
+        }
+
         public Employee GetById(string id)
         {
             if(!String.IsNullOrEmpty(id))
@@ -80,7 +92,7 @@ namespace CodeChallenge.Services
             return null;
         }
 
-        public ReportingStructure GetReportStructure(string id)
+        public ReportingStructure GetReportStructureById(string id)
         {
             // First check for a valid employee id
             if (String.IsNullOrEmpty(id))
@@ -100,10 +112,21 @@ namespace CodeChallenge.Services
 
             return new ReportingStructure
             {
-                employee = reportEmployee,
-                numberOfReports = numReports
+                Employee = reportEmployee,
+                NumberOfReports = numReports
             };
         }
+
+        // TODO: Define Get request
+        // public Employee GetCompensationById(string id)
+        // {
+        //     if(!String.IsNullOrEmpty(id))
+        //     {
+        //         return _employeeRepository.GetById(id);
+        //     }
+
+        //     return null;
+        // }
 
         public Employee Replace(Employee originalEmployee, Employee newEmployee)
         {
