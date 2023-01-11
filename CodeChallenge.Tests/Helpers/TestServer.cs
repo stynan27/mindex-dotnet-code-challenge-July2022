@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace CodeCodeChallenge.Tests.Integration.Helpers
+namespace CodeChallenge.Tests.Integration.Helpers
 {
     public class TestServer : IDisposable, IAsyncDisposable
     {

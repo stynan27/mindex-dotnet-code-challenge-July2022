@@ -9,37 +9,6 @@ using CodeChallenge.Models;
 
 namespace CodeChallenge.Controllers
 {
-    //   [ApiController]
-    // [Route("api/test")]
-    // public class TestController : ControllerBase
-    // {
-    //     private readonly ILogger _logger;
-
-    //     // constructor
-    //     public TestController(ILogger<EmployeeController> logger)
-    //     {
-    //         _logger = logger;
-    //     }
-
-    //     [HttpGet("{id}")]
-    //     public IActionResult GetTestResult(String id)
-    //     {
-    //         _logger.LogWarning("Testing...");
-    //         _logger.LogInformation("Testing... inform");
-    //         _logger.LogDebug($"Received employee get request for '{id}'");
-
-    //         //Example of a console log/print
-    //         //Console.WriteLine("This is C#");
-
-    //         //var employee = _employeeService.GetById(id);
-
-    //         // if (employee == null)
-    //         //     return NotFound();
-
-    //         return Ok("Hello World");
-    //     }
-    // }
-
     [ApiController]
     [Route("api/employee")]
     public class EmployeeController : ControllerBase

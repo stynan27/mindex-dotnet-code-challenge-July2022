@@ -2,7 +2,7 @@
 using System.IO;
 using Newtonsoft.Json;
 
-namespace CodeCodeChallenge.Tests.Integration.Helpers
+namespace CodeChallenge.Tests.Integration.Helpers
 {
     public class JsonSerialization
     {
